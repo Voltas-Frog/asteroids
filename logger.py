@@ -64,65 +64,65 @@ def log_state() -> None:
             if hasattr(value, "__class__") and "Group" in value.__class__.__name__:
                 sprites_data: list[SpriteInfo] = []
 
-                    for i, sprite in enumerate(value):
-                        if i >= _SPRITE_SAMPLE_LIMIT:
-                            break
+                for i, sprite in enumerate(value):
+                    if i >= _SPRITE_SAMPLE_LIMIT:
+                        break
 
-                        sprite_info = {"type": sprite.__class__.__name__}
+                    sprite_info = {"type": sprite.__class__.__name__}
 
-                        if hasattr(sprite, "position"):
-                            sprite_info["pos"] = [
-                                round(sprite.position.x, 2),
-                                round(sprite.position.y, 2),
-                            ]
-
-                        if hasattr(sprite, "velocity"):
-                            sprite_info["vel"] = [
-                                round(sprite.velocity,x, 2),
-                                round(sprite.velocity.y, 2),
-                            ]
-
-                        if hasattr(sprite, "radius"):
-                            sprite_info["rad"] = sprite.radius
-
-                        if hasattr(sprite, "rotation"):
-                            sprite_info["rot"] = round(sprite.rotation, 2)
-
-                        sprites_data.append(sprite_info)
-
-                    group_info: GroupInfo = {"count": len(value), "sprites": sprites_data}
-
-                    game_state[key] = group_info
-
-                if len(game_state) == 0 and hasattr(value, "position"):
-                    sprite_info = {"type": value.__class__.__name__}
-
-                    sprite_info["pos"] = [
-                        round(value.position.x, 2),
-                        round(value.position.y, 2),
-                    ]
-
-                    if hasattr(value, "velocity"):
-                        sprite_info["vel"] = [
-                            round(value.velocity.x, 2),
-                            round(value.velocity.y, 2),
+                    if hasattr(sprite, "position"):
+                        sprite_info["pos"] = [
+                            round(sprite.position.x, 2),
+                            round(sprite.position.y, 2),
                         ]
 
-                    if hasattr(value, "radius"):
-                        sprite_info["rad"] = value.radius
+                    if hasattr(sprite, "velocity"):
+                        sprite_info["vel"] = [
+                            round(sprite.velocity.x, 2),
+                            round(sprite.velocity.y, 2),
+                        ]
 
-                    if hasattr(value, "rotation"):
-                        sprite_info["rot"] = round(value.rotation, 2)
+                    if hasattr(sprite, "radius"):
+                        sprite_info["rad"] = sprite.radius
 
-                    game_state[key] = sprite_info
+                    if hasattr(sprite, "rotation"):
+                        sprite_info["rot"] = round(sprite.rotation, 2)
+
+                    sprites_data.append(sprite_info)
+
+                group_info: GroupInfo = {"count": len(value), "sprites": sprites_data}
+
+                game_state[key] = group_info
+
+            if len(game_state) == 0 and hasattr(value, "position"):
+                sprite_info = {"type": value.__class__.__name__}
+
+                sprite_info["pos"] = [
+                    round(value.position.x, 2),
+                    round(value.position.y, 2),
+                ]
+
+                if hasattr(value, "velocity"):
+                    sprite_info["vel"] = [
+                        round(value.velocity.x, 2),
+                        round(value.velocity.y, 2),
+                    ]
+
+                if hasattr(value, "radius"):
+                    sprite_info["rad"] = value.radius
+
+                if hasattr(value, "rotation"):
+                    sprite_info["rot"] = round(value.rotation, 2)
+
+            game_state[key] = sprite_info
 
     entry: dict[str, object] = {
-        "timestamp": now.strftime("%H:%M:%S.%f")[:-3],
-        "elapsed_s": math.floor((now - _start_time).total_seconds()),
-        "frame": _frame_count,
-        "screen_size": screen_size,
-        **game_state,
-    }
+            "timestamp": now.strftime("%H:%M:%S.%f")[:-3],
+            "elapsed_s": math.floor((now - _start_time).total_seconds()),
+            "frame": _frame_count,
+            "screen_size": screen_size,
+            **game_state,
+            }
 
     # New log file on each run
     mode = "w" if not _state_log_initialized else "a"
